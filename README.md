@@ -1,4 +1,4 @@
-# Push-for-Quantization-Deep-Fisher-Hashing
+# Push for Quantization: Deep Fisher Hashing
 This is the PyTorch implementation of Push for Quantization: Deep Fisher Hashing
 
 # Citation
