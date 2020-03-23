@@ -5,9 +5,13 @@ This is the PyTorch implementation of Push for Quantization: Deep Fisher Hashing
 If you use this code for your research, please consider citing:
 
 @article{liBMVC19,
+
   title={Push for Quantization: Deep Fisher Hashing},
+  
   author={Li, Yunqiang and Pei, Wenjie and van Gemert, Jan},
+  
   journal={BMVC},
+  
   year={2019}
 }
 
