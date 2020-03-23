@@ -20,7 +20,7 @@ If you have any problem about our code, feel free to contact
 
 # Dataset
 
-By default, COCO 2014 dataset is used which can be download [here](http://cocodataset.org/#download), you need to move the extracted dataset to ./data/coco.
+By default, COCO 2014 dataset is used in the provided code, which can be download [here](http://cocodataset.org/#download), you need to move the extracted dataset to ./data/coco.
 
 
 
