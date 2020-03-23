@@ -16,7 +16,6 @@ If you use this code for your research, please consider citing:
 # Contact
 If you have any problem about our code, feel free to contact
 
-\begin{itemize}
-  \item y.li-19@tudelft.nl
-\end{itemize}
+ - y.li-19@tudelft.nl
+
 
