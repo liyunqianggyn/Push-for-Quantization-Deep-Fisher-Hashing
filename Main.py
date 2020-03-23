@@ -15,16 +15,12 @@ from models.DFH_loss import DSDHLoss_margin
 import matplotlib.image as mpimg
 from cal_map import calculate_top_map, calculate_map, compress
 from Gradient_center import Center_gradient
-import resource
-rlimit = resource.getrlimit(resource.RLIMIT_NOFILE)
-resource.setrlimit(resource.RLIMIT_NOFILE, (8192, rlimit[1]))
 
 # Hyper Parameters
 num_epochs = 150
 batch_size = 128
 epoch_lr_decrease = 50
 learning_rate = 0.01
-#encode_length = 32
 num_classes = 80
 
 mu =1
@@ -42,7 +38,7 @@ mAP_all_top = np.zeros([len_encodeL_all, 1])
 
 
 def pil_loader(path):
-    # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
+   
     with open(path, 'rb') as f:
         img = Image.open(f)
         return img.convert('RGB')
@@ -65,7 +61,7 @@ def default_loader(path):
         return pil_loader(path)
 
 
-class IMAGENET(torch.utils.data.Dataset):
+class MSCOCO(torch.utils.data.Dataset):
 
     def __init__(self, root,
                  transform=None, target_transform=None, train=True, database_bool=False):
@@ -137,9 +133,6 @@ class IMAGENET(torch.utils.data.Dataset):
         """
         return self.onehot_targets
 
-
-
-
 class CNN(nn.Module):
     def __init__(self, encode_length):
         super(CNN, self).__init__()
@@ -178,15 +171,15 @@ def main():
     ])
 
     # Dataset
-    train_dataset = IMAGENET(root='/tudelft.net/staff-bulk/ewi/insy/VisionLab/yunqiangli/data/coco/',
+    train_dataset = MSCOCO(root='./data/coco/',
                             train=True,
                             transform=train_transform)
 
-    test_dataset = IMAGENET(root='/tudelft.net/staff-bulk/ewi/insy/VisionLab/yunqiangli/data/coco/',
+    test_dataset = MSCOCO(root='./data/coco/',
                             train=False,
                             transform=test_transform)
 
-    database_dataset = IMAGENET(root='/tudelft.net/staff-bulk/ewi/insy/VisionLab/yunqiangli/data/coco/',
+    database_dataset = MSCOCO(root='./data/coco/',
                             train=False,
                             transform=test_transform,
                             database_bool=True)
@@ -210,9 +203,6 @@ def main():
 
 
     cnn = CNN(encode_length=encode_length)
-    #cnn.load_state_dict(torch.load('temp.pkl'))
-
-
     # Loss and Optimizer
     criterion = DSDHLoss_margin(eta, margin)
     optimizer = torch.optim.SGD(cnn.parameters(), lr=learning_rate, momentum=0.9, weight_decay=5e-4)
@@ -229,9 +219,9 @@ def main():
     Y = train_targets.t()
     
     # multi-label process
-   # Multi_Y = Y.sum(0).expand(Y.size())
-   # Multi_Y = 1./Multi_Y
-   # Y = Multi_Y*Y
+    Multi_Y = Y.sum(0).expand(Y.size())
+    Multi_Y = 1./Multi_Y
+    Y = Multi_Y*Y
     
     Relax_center = torch.zeros(encode_length, num_classes)
     CenTer = Relax_center
@@ -260,13 +250,15 @@ def main():
             batchB = (mu * CenTer@batchY + U_batch.cpu()).sign()
 
             # C-step: two methods-- relax and sign(c-lr*d_c)
-           # batchB = (U_batch.cpu()).sign()
+            # relax
             CenTer, Relax_center = Center_gradient(Variable(batchY.cuda(), requires_grad=False), \
                                                    Variable(batchB.cuda(), requires_grad=False), \
                                                    Variable(Relax_center.cuda(), requires_grad=True), mu, vul, nta);
+            ## sign(c-lr*d_c)
+            # CenTer = Dis_Center_gradient(Variable(batchY.cuda(), requires_grad=False), \
+            #                                        Variable(batchB.cuda(), requires_grad=False), \
+            #                                        Variable(CenTer.cuda(), requires_grad=True), mu, vul);
 
-            # B-step            
-           # batchB = (mu * CenTer@batchY + U_batch.cpu()).sign()
 
             # U-step+ Backward + Optimize                     
             loss = criterion(U_batch, Variable(U.cuda()), Variable(batchS.cuda()), Variable(batchB.cuda()))
@@ -277,7 +269,7 @@ def main():
 
  
         # Test the Model
-        if (epoch + 1) % 10 == 0:
+        if (epoch + 1) % 25 == 0:
             cnn.eval()
             retrievalB, retrievalL, queryB, queryL = compress(database_loader, test_loader, cnn, classes=num_classes)
             
@@ -296,10 +288,6 @@ def main():
                 mAP_all_top[code_index, 0] = result
                 print('-------------Best mAP for all bits-------------')
                 print(mAP_all_top) 
-
-
-
-
 
 
 
