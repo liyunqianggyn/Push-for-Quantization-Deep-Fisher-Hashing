@@ -11,7 +11,7 @@ import numpy as np
 from PIL import Image
 import os
 import os.path
-from models.DFH_loss import DSDHLoss_margin
+from models.DFH_loss import DFHLoss_margin
 import matplotlib.image as mpimg
 from cal_map import calculate_top_map, calculate_map, compress
 from Gradient_center import Center_gradient
@@ -204,7 +204,7 @@ def main():
 
     cnn = CNN(encode_length=encode_length)
     # Loss and Optimizer
-    criterion = DSDHLoss_margin(eta, margin)
+    criterion = DFHLoss_margin(eta, margin)
     optimizer = torch.optim.SGD(cnn.parameters(), lr=learning_rate, momentum=0.9, weight_decay=5e-4)
             
     best_top = 0.0
@@ -250,11 +250,11 @@ def main():
             batchB = (mu * CenTer@batchY + U_batch.cpu()).sign()
 
             # C-step: two methods-- relax and sign(c-lr*d_c)
-            # relax
+                ## relax way
             CenTer, Relax_center = Center_gradient(Variable(batchY.cuda(), requires_grad=False), \
                                                    Variable(batchB.cuda(), requires_grad=False), \
                                                    Variable(Relax_center.cuda(), requires_grad=True), mu, vul, nta);
-            ## sign(c-lr*d_c)
+               ## sign(c-lr*d_c)
             # CenTer = Dis_Center_gradient(Variable(batchY.cuda(), requires_grad=False), \
             #                                        Variable(batchB.cuda(), requires_grad=False), \
             #                                        Variable(CenTer.cuda(), requires_grad=True), mu, vul);
