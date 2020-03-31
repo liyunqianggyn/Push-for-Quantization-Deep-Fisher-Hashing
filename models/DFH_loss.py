@@ -4,9 +4,9 @@ from torch.autograd import Variable
 
 
 
-class DSDHLoss_margin(nn.Module):
+class DFHLoss_margin(nn.Module):
     def __init__(self, eta, margin):
-        super(DSDHLoss_margin, self).__init__()
+        super(DFHLoss_margin, self).__init__()
         self.eta = eta
         self.margin = margin
 
