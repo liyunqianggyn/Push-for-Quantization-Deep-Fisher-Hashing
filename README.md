@@ -1,7 +1,7 @@
 # Push for Quantization: Deep Fisher Hashing
 This is the PyTorch implementation of [Push for Quantization: Deep Fisher Hashing](https://arxiv.org/abs/1909.00206)
 
-In the meantime, a re-implemented version of our work: https://github.com/swuxyj/DeepHash-pytorch
+In the meantime, a re-implemented version of our work: [Training code](https://github.com/swuxyj/DeepHash-pytorch)
 
 # Citation
 If you use this code for your research, please consider citing:
