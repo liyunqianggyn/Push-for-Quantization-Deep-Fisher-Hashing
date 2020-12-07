@@ -3,7 +3,7 @@ This is the PyTorch implementation of [Push for Quantization: Deep Fisher Hashin
 
 In the meantime, a re-implemented version of our work: [Training code](https://github.com/swuxyj/DeepHash-pytorch)
 
-# Citation
+## Citation
 If you use this code for your research, please consider citing:
 
 ```
@@ -15,13 +15,13 @@ If you use this code for your research, please consider citing:
 }
 ```
 
-# Contact
+## Contact
 If you have any problem about our code, feel free to contact
 
  - y.li-19@tudelft.nl
  - J.C.vanGemert@tudelft.nl
 
-# Dataset
+## Dataset
 
 The COCO 2014 dataset is used in the provided code, which can be download [here](http://cocodataset.org/#download), you need to move the extracted dataset to ./data/coco.
 
